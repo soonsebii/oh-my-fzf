@@ -2,31 +2,29 @@
 
 function __require()
 {
-    [ -z $(which brew) ] && 
-        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  [ -z $(which brew) ] && 
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 }
 
 function install_git()
 {
-    __require
+  __require
 
-    [ -z $(which git) ] &&
-        brew install git
+  [ -z $(which git) ] && brew install git
 }
 
 function install_moreutils()
 {
-    __require
+  __require
 
-    [ -z $(which ifne) ] &&
-        brew install moreutils
+  [ -z $(which ifne) ] && brew install moreutils
+  [ -z $(which tmux) ] && brew install tmux
 }
 
 function install_ag()
 {
-    __require
+  __require
 
-    [ -z $(which ag) ] &&
-        brew install the_silver_searcher
+  [ -z $(which ag) ] && brew install the_silver_searcher
 }
 

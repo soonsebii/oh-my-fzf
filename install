@@ -1,52 +1,55 @@
 #!/bin/bash
+#
+# Provide convinient way to install fuzzy-finder and to setup related settings.
 
-#
-# Internal Variables
-#
 PLATFORM=$(uname -s)
 CWD=$(dirname ${BASH_SOURCE[0]})
-OPTION_VERBOSE=0
 
-source $CWD/arch/common.bash
+source "${CWD}/arch/common.bash"
 
-case $PLATFORM in
-    "Darwin")
-        source $CWD/arch/darwin.bash
+main()
+{
+  for opt in "$@"; do
+    case "${opt}" in
+      --d)
+        export OPTION_VERBOSE=1
         ;;
-
-    "Linux")
-        if [ "$(os_name)" = "centos" ]; then
-            source $CWD/arch/centos.bash
-        elif [ "$(os_name)" = "ubuntu" ] || [ "$(os_name)" = "Ubuntu" ]; then
-            source $CWD/arch/ubuntu.bash
-        else
-            echo "Unsupport Linux version $(os_name)"
-            exit 1
-        fi
+      --help|*)
+        usage
+        exit 0
         ;;
-
-    *)
-        echo "Unsupport PLATFORM -> $PLATFORM"
-        exit 1
-        ;;
-esac
-
-for opt in "$@"; do
-    case $opt in
-        --d) OPTION_VERBOSE=1 ;;
-        --help|*)
-            _usage
-            exit 0
-             ;;
     esac
-done
+  done
 
-_banner hi
-_progress install_git git
-_progress install_moreutils utils
-_progress install_ag ag
-_progress install_fzf fzf
-_progress update_bashrc bash
-_progress update_vimrc vim
-_progress update_tmux tmux
-_banner bye
+  case "${PLATFORM}" in
+    Darwin)
+      source "${CWD}/arch/darwin.bash"
+      ;;
+    Linux)
+      if [ "$(os_name)" = "centos" ]; then
+        source "${CWD}/arch/centos.bash"
+      elif [[ "$(os_name)" = "ubuntu"  || "$(os_name)" = "Ubuntu" ]]; then
+        source "${CWD}/arch/ubuntu.bash"
+      else
+        error "Unsupport Linux version $(os_name)"
+        exit 1
+      fi
+      ;;
+    *)
+      error "Unsupport PLATFORM -> ${PLATFORM}"
+      exit 1
+      ;;
+  esac
+
+  banner hi
+  progress install_git
+  progress install_moreutils
+  progress install_ag
+  progress install_fzf
+  progress update_bashrc
+  progress update_vimrc
+  progress update_tmux 
+  banner bye
+}
+
+main "$@"

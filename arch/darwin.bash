@@ -2,15 +2,26 @@
 
 function __require()
 {
-  [ -z $(which brew) ] && 
+  if [ -z $(which brew) ]; then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  else
+    return 0;
+  fi
+
+  return "$?"
 }
 
 function install_git()
 {
   __require
 
-  [ -z $(which git) ] && brew install git
+  if [ -z $(which git) ]; then
+    brew install git
+  else
+    return 0;
+  fi
+
+  return "$?"
 }
 
 function install_moreutils()

@@ -1,25 +1,22 @@
 #!/bin/bash
 
+function error_handler()
+{
+  if [ "$1" -gt 1 ]; then
+    error "failed to 'apt-get install'"
+    return 1;
+  fi
+}
+
 function install_git()
 {
-  if [ -z $(which git) ]; then
-    echo "apt get install git"
-    $SUDO apt-get install -y git
-  else
-    return 0;
-  fi
-
+  [ -z $(which git) ] && ($SUDO apt-get install -y git) || error_handler "$?"
   return "$?"
 }
 
 function install_moreutils()
 {
-  if [ -z $(which ifne) ]; then
-    $SUDO apt-get install -y moreutils
-  else
-    return 0;
-  fi
-
+  [ -z $(which ifne) ] && ($SUDO apt-get install -y moreutils) || error_handler "$?"
   return "$?"
 }
 

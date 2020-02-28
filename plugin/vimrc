@@ -1,0 +1,87 @@
+" =============================================================================
+" Plug
+" =============================================================================
+call plug#begin('~/.vim/plugged')
+
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/seoul256.vim'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-tbone'
+Plug 'wesleyche/srcexpl'
+Plug 'vim-scripts/taglist.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+
+call plug#end()
+
+" ============================================================================
+" Color 
+" ============================================================================ 
+colo seoul256
+
+" ============================================================================
+" Settings 
+" ============================================================================ 
+set nu
+set autoindent
+set smartindent
+set showcmd
+set tabstop=4
+set shiftwidth=4
+set expandtab smarttab
+set encoding=utf-8
+set fileencodings=utf-8
+set backspace=indent,eol,start
+set tags=./tags,tags;
+set hlsearch
+
+" https://stackoverflow.com/questions/45866451
+" The zt command will redraw vim so that the current line is at the top of the screen
+nnoremap n nzt
+nnoremap N Nzt
+xnoremap n nzt
+xnoremap N Nzt
+
+" javascript
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
+
+function! LoadCscope()
+  let db = findfile("cscope.out", ".;")
+  if (!empty(db))
+    let path = strpart(db, 0, match(db, "/cscope.out$"))
+    set nocscopeverbose " suppress 'duplicate connection' error
+    exec "cs add " . db . " " . path
+    set cscopeverbose
+  endif
+endfunction
+
+" cscope
+set csprg=/usr/bin/cscope
+set csto=0
+set cst
+call LoadCscope()
+
+" taglist
+filetype on
+nmap <F7> :TlistToggle<CR>
+let Tlist_Ctags_Cmd = "/usr/bin/ctags"
+let Tlist_Inc_Winwidth = 0
+let Tlist_Exit_OnlyWindow = 0
+let Tlist_Auto_Open = 0
+let Tlist_Use_Right_Window = 1
+
+" source explorer
+nmap <F8> :SrcExplToggle<CR>
+nmap <C-H> <C-W>h
+nmap <C-J> <C-W>j
+nmap <C-K> <C-W>k
+nmap <C-L> <C-W>l
+let g:SrcExpl_winHeight = 8
+let g:SrcExpl_refreshTime = 100
+let g:SrcExpl_jumpKey = "<ENTER>"
+let g:SrcExpl_gobackKey = "<SPACE>"
+let g:SrcExpl_isUpdateTags = 0
+
+" NERD Tree
+let NERDTreeWinPos = "left"
+nmap <F9> :NERDTreeToggle<CR>
